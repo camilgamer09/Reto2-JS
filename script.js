@@ -88,3 +88,46 @@ function obtenerAlumnosOrdenados() {
   return lista.sort((a, b) => b.promedio - a.promedio);
 }
 
+function renderizarResultados() {
+  seccionResultados.style.display = 'block';
+
+  let htmlAlumnos = '';
+  nombres.forEach((nombre, idx) => {
+    const c = notas[idx];
+    const prom = obtenerPromedioAlumno(idx);
+    htmlAlumnos += `
+      <div class="alumno-block">
+        <strong>Nombre ${idx + 1}: ${nombre}</strong><br>
+        C1: ${c[0]}<br>
+        C2: ${c[1]}<br>
+        C3: ${c[2]}<br>
+        Promedio: ${prom.toFixed(2)}
+      </div>
+    `;
+  });
+  listaAlumnosDiv.innerHTML = htmlAlumnos;
+
+  const promC1 = obtenerPromedioCertamen(0);
+  const promC2 = obtenerPromedioCertamen(1);
+  const promC3 = obtenerPromedioCertamen(2);
+  const promGeneral = obtenerPromedioGeneral();
+  const { aprobados, reprobados } = obtenerAprobadosYReprobados();
+
+  resumenCursoDiv.innerHTML = `
+    <div class="resumen-block">
+      Promedio del curso C1: ${promC1.toFixed(2)}<br>
+      Promedio del curso C2: ${promC2.toFixed(2)}<br>
+      Promedio del curso C3: ${promC3.toFixed(2)}<br>
+      Promedio Final Curso: ${promGeneral.toFixed(2)}<br>
+      Aprobados: ${aprobados}<br>
+      Reprobados: ${reprobados}
+    </div>
+  `;
+
+  const listaOrdenada = obtenerAlumnosOrdenados();
+  let htmlOrdenados = '<strong>Alumnos Ordenados por Promedio:</strong><br>';
+  listaOrdenada.forEach(item => {
+    htmlOrdenados += `${item.nombre}: ${item.promedio.toFixed(2)}<br>`;
+  });
+  listaOrdenadaDiv.innerHTML = `<div class="ordenados-block">${htmlOrdenados}</div>`;
+}
