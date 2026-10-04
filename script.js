@@ -43,3 +43,48 @@ form.addEventListener('submit', function (e) {
   }
 });
 
+function validarEntradas(nombre, c1, c2, c3) {
+  if (!nombre) {
+    mensajeError.textContent = 'Por favor, ingresa un nombre válido.';
+    return false;
+  }
+  const notasValidas = [c1, c2, c3].every(n => !isNaN(n) && n >= 1 && n <= 100);
+  if (!notasValidas) {
+    mensajeError.textContent = 'Las notas deben ser números entre 1 y 100.';
+    return false;
+  }
+  return true;
+}
+
+const calcularPromedioArreglo = (arr) => 
+  arr.length ? arr.reduce((acc, curr) => acc + curr, 0) / arr.length : 0;
+
+function obtenerPromedioAlumno(index) {
+  return calcularPromedioArreglo(notas[index]);
+}
+
+function obtenerPromedioCertamen(numCertamen) {
+  const notasCertamen = notas.map(fila => fila[numCertamen]);
+  return calcularPromedioArreglo(notasCertamen);
+}
+
+function obtenerPromedioGeneral() {
+  const promediosAlumnos = nombres.map((_, i) => obtenerPromedioAlumno(i));
+  return calcularPromedioArreglo(promediosAlumnos);
+}
+
+function obtenerAprobadosYReprobados() {
+  const promedios = nombres.map((_, i) => obtenerPromedioAlumno(i));
+  const aprobados = promedios.filter(prom => prom >= NOTA_MINIMA_APROBACION).length;
+  const reprobados = promedios.length - aprobados;
+  return { aprobados, reprobados };
+}
+
+function obtenerAlumnosOrdenados() {
+  const lista = nombres.map((nombre, i) => ({
+    nombre: nombre,
+    promedio: obtenerPromedioAlumno(i)
+  }));
+  return lista.sort((a, b) => b.promedio - a.promedio);
+}
+
